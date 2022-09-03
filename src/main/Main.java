@@ -1,10 +1,10 @@
 package main;
 
-import panels.GameWindow;
+import scenes.Stage;
 
 public class Main {
 	public static void main(String[] args) {
-		new GameWindow();
+		new Stage();
 	}
 
 }
