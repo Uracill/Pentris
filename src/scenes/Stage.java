@@ -51,9 +51,9 @@ public class Stage extends JFrame {
 	
 	private void setupObserverPattern() {
 		windowListener.registriereBeobachter(new SubwerkzeugObserver() {
-			
+
 			@Override
-			public void reagiereAufAenderung() {
+			public void reagiereAufAenderung(MenuState newState) {	//die erste Methode reagiert
 				if(menuStateManager.getCurrentState() == MenuState.Pentris
 		                || menuStateManager.getCurrentState() == MenuState.Tetris
 		                && menuStateManager.getCurrentState() != MenuState.Pause) {
@@ -61,6 +61,16 @@ public class Stage extends JFrame {
 				}
 			}
 		});
+		
+		for (AbstractScene abstractScene : sceneList) {
+			abstractScene.registriereBeobachter(new SubwerkzeugObserver() {
+				
+				@Override
+				public void reagiereAufAenderung(MenuState newState) {					updateScene(newState);
+				}
+			});
+		}
+		
 	}
 	
 	private void setupStart() {

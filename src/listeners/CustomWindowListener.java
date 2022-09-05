@@ -4,6 +4,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import observer_pattern.ObservableSubwerkzeug;
+import states.MenuState;
 
 public class CustomWindowListener extends ObservableSubwerkzeug implements WindowListener {
 
@@ -49,6 +50,6 @@ public class CustomWindowListener extends ObservableSubwerkzeug implements Windo
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		informiereUeberAenderung();
+		informiereUeberAenderung(MenuState.Pause);
 	}
 }

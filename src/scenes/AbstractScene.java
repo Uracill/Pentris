@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import listeners.UserInput;
 import observer_pattern.ObservableSubwerkzeugInterface;
 import observer_pattern.SubwerkzeugObserver;
+import states.MenuState;
 
 public abstract class AbstractScene extends JPanel implements ObservableSubwerkzeugInterface{
 	
@@ -26,12 +27,14 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
 	
-	private Set<SubwerkzeugObserver> _alleBeobachter;
+	protected Set<SubwerkzeugObserver> alleBeobachter;
 	
 	public AbstractScene() {
-		componentList = new ArrayList<>();
+		componentList = new ArrayList<JComponent>();
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
+		alleBeobachter = new HashSet<SubwerkzeugObserver>();
+		
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(10, 10, 10, 10);
 		this.setLayout(gbl);
@@ -66,20 +69,20 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	
 	@Override
 	public void registriereBeobachter(SubwerkzeugObserver beobachter) {
-		_alleBeobachter = new HashSet<SubwerkzeugObserver>();
+		alleBeobachter.add(beobachter);
 	}
 
 	@Override
 	public void entferneBeobachter(SubwerkzeugObserver beobachter) {
-		_alleBeobachter.remove(beobachter);
+		alleBeobachter.remove(beobachter);
 		
 	}
 
 	@Override
-	public void informiereUeberAenderung() {
-		for (SubwerkzeugObserver beobachter : _alleBeobachter)
+	public void informiereUeberAenderung(MenuState newState) {
+		for (SubwerkzeugObserver beobachter : alleBeobachter)
         {
-            beobachter.reagiereAufAenderung();
+            beobachter.reagiereAufAenderung(newState);
         }
 	}
 	

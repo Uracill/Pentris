@@ -3,16 +3,17 @@ package observer_pattern;
 import java.util.HashSet;
 import java.util.Set;
 
+import states.MenuState;
+
 public abstract class ObservableSubwerkzeug {
 	
-    private Set<SubwerkzeugObserver> _alleBeobachter;
+    private Set<SubwerkzeugObserver> alleBeobachter;
 
     /**
      * Initialisiert ein beobachtbares Subwerkzeug.
      */
-    public ObservableSubwerkzeug()
-    {
-        _alleBeobachter = new HashSet<SubwerkzeugObserver>();
+    public ObservableSubwerkzeug() {
+        alleBeobachter = new HashSet<SubwerkzeugObserver>();
     }
 
     /**
@@ -21,21 +22,19 @@ public abstract class ObservableSubwerkzeug {
      * 
      * @require beobachter != null
      */
-    public void registriereBeobachter(SubwerkzeugObserver beobachter)
-    {
+    public void registriereBeobachter(SubwerkzeugObserver beobachter) {
         assert beobachter != null : "Vorbedingung verletzt: beobachter != null";
-        _alleBeobachter.add(beobachter);
+        alleBeobachter.add(beobachter);
     }
 
     /**
      * Entfernt einen Beobachter dieses Subwerkzeugs. Wenn der Beobachter gar
      * nicht registriert war, passiert nichts.
      */
-    public void entferneBeobachter(SubwerkzeugObserver beobachter)
-    {
-        _alleBeobachter.remove(beobachter);
+    public void entferneBeobachter(SubwerkzeugObserver beobachter) {
+        alleBeobachter.remove(beobachter);
     }
-
+    
     /**
      * Informiert alle an diesem Subwerkzeug registrierten Beobachter über eine
      * Änderung.
@@ -43,11 +42,9 @@ public abstract class ObservableSubwerkzeug {
      * Diese Methode muss von der erbenden Klasse immer dann aufgerufen werden,
      * wenn eine Änderung geschehen ist, die für Beobachter interessant ist.
      */
-    protected void informiereUeberAenderung()
-    {
-        for (SubwerkzeugObserver beobachter : _alleBeobachter)
-        {
-            beobachter.reagiereAufAenderung();
+    protected void informiereUeberAenderung(MenuState newState) {
+        for (SubwerkzeugObserver beobachter : alleBeobachter) {
+            beobachter.reagiereAufAenderung(newState);
         }
     }
 }
