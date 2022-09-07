@@ -3,7 +3,9 @@ package scenes;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -24,6 +26,9 @@ public class TetrisScene extends AbstractScene {
 	private GameStateManager gameStateManager;
 	
 	private int level;
+	private int clearedRows;
+	private int rowsLevel;
+	private int points;
 	
 	private int gridCellSize;
 	private int gridRows;
@@ -38,11 +43,13 @@ public class TetrisScene extends AbstractScene {
 	gridRows = 20;
 	gridColumns = 10;
 	field = new int[gridColumns][gridRows];
-	
-	level = 1;	//TODO: nach startGame
 	}
 
 	public void startGame() {
+		level = 1;
+		clearedRows = 0;
+		rowsLevel = 0;
+		points = 0;
 		gameStateManager = new GameStateManager();
 		setupKeyStrokes();
 		startGameLoop();
@@ -50,12 +57,12 @@ public class TetrisScene extends AbstractScene {
 	
 	private void setupKeyStrokes() {
 		addKeyBinding("Escape", () -> informiereUeberAenderung(MenuState.Pause));
-		addKeyBinding("W", () -> moveUp());
-		addKeyBinding("A", () -> moveLeft());
-		addKeyBinding("S", () -> moveDown());
-		addKeyBinding("D", () -> moveRight());
-		addKeyBinding("Q", () -> rotateLeft());
-		addKeyBinding("E", () -> rotateRight());
+		addKeyBinding("UP", () -> instantDrop());
+		addKeyBinding("LEFT", () -> moveLeft());
+		addKeyBinding("DOWN", () -> moveDown());
+		addKeyBinding("RIGHT", () -> moveRight());
+		addKeyBinding("T", () -> rotateLeft());
+		addKeyBinding("Z", () -> rotateRight());	//TODO: Add save
 	}
 
 	private void addKeyBinding(String key, UserInput input) {
@@ -89,6 +96,8 @@ public class TetrisScene extends AbstractScene {
 		super.paintComponent(g);
 		
 		drawGrid(g);
+		g.drawString("Points: " + Integer.toString(points), 500, 100);
+		g.drawString("Level: " + Integer.toString(level), 500, 120);
 	}
 
 	private void drawGrid(Graphics g) {
@@ -128,7 +137,7 @@ public class TetrisScene extends AbstractScene {
 		}
 	}
 	
-	private void moveUp() {
+	private void instantDrop() {
 		if(isFree(MoveState.Up)) {
 			deleteBlock();
 			block.instantDrop();
@@ -192,6 +201,7 @@ public class TetrisScene extends AbstractScene {
 	private boolean isFree(MoveState state) {
 		int offsetx = 0;	//Rotation left and right
 		int offsety = 0;
+		TetrisBlock testBlock = new TetrisBlock(block);
 		
 		if(state == MoveState.Left) {
 			offsetx = -1;
@@ -205,14 +215,20 @@ public class TetrisScene extends AbstractScene {
 			offsetx = 0;
 			offsety = 1;
 		}
+		else if(state == MoveState.RotateLeft) {
+			testBlock.rotateLeft();
+		}
+		else if(state == MoveState.RotateRight) {
+			testBlock.rotateRight();
+		}
 		int[][] testField = copy(field);
 		deleteBlock(testField);
-		for(int x = 0; x < block.getWidth(); x++) {
-			for(int y = 0; y < block.getHeight(); y++) {
-				if(inField(block.getX() + offsetx, block.getY() + offsety)) {
-					if(testField[x + block.getX() + offsetx]
-							[y + block.getY() + offsety] > 0 
-							&& block.getBlock()[x][y] == 1) {
+		for(int x = 0; x < testBlock.getWidth(); x++) {
+			for(int y = 0; y < testBlock.getHeight(); y++) {
+				if(inField(testBlock.getX() + offsetx, testBlock.getY() + offsety)) {	//TODO: Rotate
+					if(testField[x + testBlock.getX() + offsetx]
+							[y + testBlock.getY() + offsety] > 0 
+							&& testBlock.getBlock()[x][y] == 1) {
 						return false;
 					}
 				}
@@ -272,5 +288,53 @@ public class TetrisScene extends AbstractScene {
 	        dst[i] = Arrays.copyOf(src[i], src[i].length);
 	    }
 	    return dst;
+	}
+
+	public List<Integer> fullRows() {
+		List<Integer> fullRows = new ArrayList<>();
+		for(int j = 0; j < gridRows; j++) {
+			boolean isFull = true;
+			for(int i = 0; i < gridColumns; i++) {
+				if(field[i][j] == 0) {	//if one column of the row is empty, then the line could not get cleared
+					isFull = false;
+				}
+			}
+			if(isFull) {
+				fullRows.add(j);
+			}
+		}
+		return fullRows;
+		
+	
+	}
+
+	public void clearRows(List<Integer> rows) {
+		for(int r: rows) {
+			for(int j = r; j > 0; j--) {
+				for(int i = field.length - 1; i >= 0; i--) {
+					field[i][j] = field[i][j-1];
+				}
+			}
+		}
+	}
+	
+	public void update(int fullRows) {
+		points = (int) (points + Math.round(Math.pow(10, fullRows) * (level * 0.6)));
+		clearedRows += fullRows;
+		rowsLevel += fullRows;
+		
+		if(rowsLevel >= 10) {
+			level++;
+			rowsLevel = rowsLevel - 10;
+		}
+		System.out.println(points);
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public int getVelocity() {
+		return (int)(250/(0.2*level));
 	}
 }

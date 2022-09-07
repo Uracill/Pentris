@@ -10,14 +10,12 @@ public class GameStateManagerTest {
 	private GameState nullState;
 	private GameState runningState;
 	private GameState pausedState;
-	private GameState menuState;
 	
 	public GameStateManagerTest() {
 		gameStateManager = new GameStateManager();
 		nullState = GameState.Null;
 		runningState = GameState.Running;
 		pausedState = GameState.Paused;
-		menuState = GameState.Menu;
 	}
 	
 	@Test
@@ -33,7 +31,5 @@ public class GameStateManagerTest {
 		assertSame(runningState, gameStateManager.getState());
 		gameStateManager.update(GameState.Paused);
 		assertSame(pausedState, gameStateManager.getState());
-		gameStateManager.update(GameState.Menu);
-		assertSame(menuState, gameStateManager.getState());
 	}
 }

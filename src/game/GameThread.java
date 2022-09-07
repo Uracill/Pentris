@@ -1,8 +1,11 @@
 package game;
 
+import java.util.List;
+
 import scenes.TetrisScene;
 import states.GameState;
 import states.GameStateManager;
+import states.MenuState;
 
 public class GameThread extends Thread{
 
@@ -23,15 +26,20 @@ public class GameThread extends Thread{
 		while(gameStateManager.getState() == GameState.Running) {
 			
 			try {
-				
 				spawner.spawnBlock();
-				Thread.sleep(100);
+				Thread.sleep(scene.getVelocity());
 				if(!scene.isLanding()) {
-					gameStateManager.update(GameState.Menu);
+					gameStateManager.update(GameState.Paused);
+					scene.informiereUeberAenderung(MenuState.GameOver);
 				}
 				while(scene.isLanding()) {
 				scene.moveDown();
-				Thread.sleep(100);
+				Thread.sleep(scene.getVelocity());
+				}
+				List<Integer> rows = scene.fullRows();
+				if(rows.size() > 0) {
+					scene.clearRows(rows);
+					scene.update(rows.size());
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
