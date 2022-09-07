@@ -20,7 +20,7 @@ public class MenuStateManager {
 				previousState = MenuState.Null;
 				currentState = newState;
 			}
-			case Options, Pause -> {
+			case Options, Pause, GameOver -> {
 				if(currentState != newState) {
 					previousState = currentState;
 					currentState = newState;

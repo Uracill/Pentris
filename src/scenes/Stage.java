@@ -14,7 +14,7 @@ import states.MenuStateManager;
 public class Stage extends JFrame {
 	
 	private List<AbstractScene> sceneList;
-	private JPanel currentScene;
+	private AbstractScene currentScene;
 	
 	private MenuStateManager menuStateManager;
 	
@@ -32,10 +32,10 @@ public class Stage extends JFrame {
 
 	private void setupStage() {
 		width = 600;
-		height = 400;
+		height = 450;
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(true);
+		this.setResizable(false);
         this.setBounds(0, 0, width, height);
         this.setLocationRelativeTo(null);
         this.setFocusable(true);
@@ -47,6 +47,14 @@ public class Stage extends JFrame {
 		sceneList = new ArrayList<AbstractScene>();
 		menuStateManager = new MenuStateManager();
 		sceneList.add(new MainScene());
+		sceneList.add(new PentrisScene());
+		sceneList.add(new TetrisScene());
+		sceneList.add(new HighscoreScene());
+		sceneList.add(new OptionsScene());
+		sceneList.add(new PauseScene());
+		sceneList.add(new OCScene());
+		sceneList.add(new PLScene());
+		sceneList.add(new GameOverScene());
 	}
 	
 	private void setupObserverPattern() {
@@ -66,21 +74,23 @@ public class Stage extends JFrame {
 			abstractScene.registriereBeobachter(new SubwerkzeugObserver() {
 				
 				@Override
-				public void reagiereAufAenderung(MenuState newState) {					updateScene(newState);
+				public void reagiereAufAenderung(MenuState newState) {
+					updateScene(newState);
 				}
 			});
 		}
-		
 	}
 	
 	private void setupStart() {
 		updateScene(MenuState.Main);
-		this.setContentPane(currentScene);
 		this.setVisible(true);
 	}
 	
 	private void updateScene(MenuState newState) {
 		menuStateManager.update(newState);
+		if(currentScene != null) {
+			this.remove(currentScene);
+		}
 		
 		switch(menuStateManager.getCurrentState()) {
 			case Null -> {
@@ -92,17 +102,19 @@ public class Stage extends JFrame {
 			}
 			case Pentris -> {
 				currentScene = sceneList.get(1);
+				((PentrisScene)currentScene).startGame();
 				break;
 			}
 			case Tetris -> {
 				currentScene = sceneList.get(2);
-				break;
-			}
-			case Options -> {
-				currentScene = sceneList.get(3);
+				((TetrisScene)currentScene).startGame();
 				break;
 			}
 			case Highscore -> {
+				currentScene = sceneList.get(3);
+				break;
+			}
+			case Options -> {
 				currentScene = sceneList.get(4);
 				break;
 			}
@@ -118,7 +130,14 @@ public class Stage extends JFrame {
 				currentScene = sceneList.get(7);
 				break;
 			}
+			case GameOver -> {
+				currentScene = sceneList.get(8);
+				break;
+			}
 		}
+		this.add(currentScene);
+		currentScene.repaint();
+		this.setVisible(true);
 	}
 	
 	public MenuStateManager getMenuStateManager() {

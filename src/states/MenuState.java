@@ -6,9 +6,10 @@ public enum MenuState {
 	Main,
 	Pentris,
 	Tetris,
-	Options,
 	Highscore,
+	Options,
 	Pause,
 	OC,
-	PL;
+	PL,
+	GameOver;
 }

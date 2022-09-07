@@ -4,14 +4,14 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.jupiter.api.Test;
 
-public class MenuStatesManagerTest {
+public class MenuStateManagerTest {
 	
 	private MenuStateManager menuStateManager;
 	private MenuState nullState;
 	private MenuState mainState;
 	private MenuState optionsState;
 	
-	public MenuStatesManagerTest() {
+	public MenuStateManagerTest() {
 		menuStateManager = new MenuStateManager();
 		nullState = MenuState.Null;
 		mainState = MenuState.Main;
