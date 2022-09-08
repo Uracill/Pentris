@@ -9,14 +9,14 @@ import states.MenuState;
 
 public class GameThread extends Thread{
 
-	private TetrisScene scene;
+	private Game scene;
 	private GameStateManager gameStateManager;
 	private BlockSpawner spawner;
 
-	public GameThread(TetrisScene scene, GameStateManager gameStateManager) {
-		this.scene = scene;
+	public GameThread(Game game, GameStateManager gameStateManager) {
+		this.scene = game;
 		this.gameStateManager = gameStateManager;
-		this.spawner = new BlockSpawner(scene);
+		this.spawner = new BlockSpawner(game);
 		this.start();
 	}
 	
@@ -27,11 +27,12 @@ public class GameThread extends Thread{
 			
 			try {
 				spawner.spawnBlock();
-				Thread.sleep(scene.getVelocity());
 				if(!scene.isLanding()) {
 					gameStateManager.update(GameState.Paused);
 					scene.informiereUeberAenderung(MenuState.GameOver);
+					this.join(10000);
 				}
+				Thread.sleep(scene.getVelocity());
 				while(scene.isLanding()) {
 				scene.moveDown();
 				Thread.sleep(scene.getVelocity());

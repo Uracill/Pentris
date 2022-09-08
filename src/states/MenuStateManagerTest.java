@@ -47,5 +47,8 @@ public class MenuStateManagerTest {
 		menuStateManager.update(MenuState.Options);
 		assertSame(optionsState, menuStateManager.getCurrentState());
 		assertSame(nullState, menuStateManager.getPreviousState());
+		menuStateManager.update(MenuState.Previous);
+		assertSame(nullState, menuStateManager.getCurrentState());
+		assertSame(optionsState, menuStateManager.getPreviousState());
 	}
 }

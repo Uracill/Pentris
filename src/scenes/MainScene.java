@@ -14,16 +14,16 @@ public class MainScene extends AbstractScene {
 	}
 
 	private void setupComponents() {
-		setupComponent(new JLabel(), 1, 0, 1, 1, null, "PENTRIS");
+		setupComponent(new JLabel(), 1, 0, 1, 1, null, "PENTRIS", 40);
 		setupComponent(new JButton(), 0, 1, 1, 1, () -> 
-		{informiereUeberAenderung(MenuState.Pentris);}, "Pentris");
+		{informiereUeberAenderung(MenuState.Pentris);}, "Pentris", 0);
 		setupComponent(new JButton(), 2, 1, 1, 1, () -> 
-		{informiereUeberAenderung(MenuState.Tetris);}, "Tetris");
+		{informiereUeberAenderung(MenuState.Tetris);}, "Tetris", 0);
 		setupComponent(new JButton(), 0, 2, 1, 1, () -> 
-		{informiereUeberAenderung(MenuState.Highscore);}, "Highscore");
+		{informiereUeberAenderung(MenuState.Highscore);}, "Highscore", 0);
 		setupComponent(new JButton(), 2, 2, 1, 1, () -> 
-		{informiereUeberAenderung(MenuState.Options);}, "Options");
-		setupComponent(new JButton(), 1, 3, 1, 1, () -> {System.exit(0);}, "Quit");
+		{informiereUeberAenderung(MenuState.Options);}, "Options", 0);
+		setupComponent(new JButton(), 1, 3, 1, 1, () -> {System.exit(0);}, "Quit", 0);
 		this.setVisible(true);
 	}
 	

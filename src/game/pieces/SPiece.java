@@ -1,6 +1,6 @@
 package game.pieces;
 
-public class SPiece extends TetrisBlock{
+public class SPiece extends Block{
 
 	public SPiece() {
 		super(5, 3, 0, 

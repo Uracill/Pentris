@@ -1,6 +1,5 @@
 package game;
 
-import java.awt.Color;
 import java.util.Random;
 
 import game.pieces.IPiece;
@@ -10,17 +9,16 @@ import game.pieces.OPiece;
 import game.pieces.SPiece;
 import game.pieces.TPiece;
 import game.pieces.ZPiece;
-import scenes.TetrisScene;
 
 public class BlockSpawner {
 	
+	private Game scene;
+	
 	private int number;
 	private Random random;
-	
-	private TetrisScene scene;
 
-	public BlockSpawner(TetrisScene scene) {
-		this.scene = scene;
+	public BlockSpawner(Game game) {
+		this.scene = game;
 		number = 7;
 		random = new Random();
 	}

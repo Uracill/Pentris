@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 
-public class TetrisBlock {
+public class Block {
 	
 	private List<int[][]> block;
 	private int colorNumber;
@@ -12,8 +12,7 @@ public class TetrisBlock {
 	private int y;
 	private int rotationState;
 	
-	public TetrisBlock(int colorNumber,
-			int x, int y, int[][]... block) {
+	public Block(int colorNumber, int x, int y, int[][]... block) {
 		this.block = Arrays.asList(block);
 		this.colorNumber = colorNumber;
 		this.x = x;
@@ -21,7 +20,7 @@ public class TetrisBlock {
 		this.rotationState = 0;
 	}
 	
-	public TetrisBlock(TetrisBlock block) {
+	public Block(Block block) {
 		this.block = block.getAllBlocks();
 		this.colorNumber = block.getColorNumber();
 		this.x = block.getX();

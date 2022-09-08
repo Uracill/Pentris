@@ -1,6 +1,6 @@
 package game.pieces;
 
-public class ZPiece extends TetrisBlock{
+public class ZPiece extends Block{
 
 	public ZPiece() {
 		super(7, 3, 0, 

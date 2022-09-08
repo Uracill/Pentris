@@ -16,15 +16,31 @@ public class MenuStateManager {
 				previousState = MenuState.Null;
 				currentState = MenuState.Null;
 			}
+			case Previous -> {
+				MenuState tempState = previousState;
+				previousState = currentState;
+				currentState = tempState;
+				if(tempState == MenuState.Main || tempState == MenuState.Main
+						&& tempState == MenuState.Main ||tempState == MenuState.Main) {
+					previousState = MenuState.Null;
+				}
+			}
 			case Main, Pentris, Tetris, Highscore -> {
 				previousState = MenuState.Null;
 				currentState = newState;
 			}
 			case Options, Pause, GameOver -> {
-				if(currentState != newState) {
+				if(currentState != newState && currentState != MenuState.OC
+						&& currentState != MenuState.PL) {
 					previousState = currentState;
 					currentState = newState;
 				}
+				else {
+					currentState = newState;
+				}
+			}
+			case OC, PL -> {
+				currentState = newState;
 			}
 		}
 	}

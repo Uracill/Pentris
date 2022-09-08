@@ -1,6 +1,6 @@
 package game.pieces;
 
-public class JPiece extends TetrisBlock{
+public class JPiece extends Block{
 
 	public JPiece() {
 		super(2, 3, 0, 

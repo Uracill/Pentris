@@ -3,6 +3,7 @@ package states;
 public enum MenuState {
 	
 	Null,
+	Previous,
 	Main,
 	Pentris,
 	Tetris,

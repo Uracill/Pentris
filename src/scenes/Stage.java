@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-
 import listeners.CustomWindowListener;
 import observer_pattern.SubwerkzeugObserver;
 import states.MenuState;
@@ -79,6 +77,8 @@ public class Stage extends JFrame {
 				}
 			});
 		}
+		((OptionsScene) sceneList.get(4)).setupObserverPattern(
+				((OCScene) sceneList.get(6)));
 	}
 	
 	private void setupStart() {
@@ -93,7 +93,7 @@ public class Stage extends JFrame {
 		}
 		
 		switch(menuStateManager.getCurrentState()) {
-			case Null -> {
+			case Null, Previous -> {
 				System.exit(1); 					//Nicht normal
 			}
 			case Main -> {

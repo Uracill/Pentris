@@ -15,7 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import audio.AudioOptions;
 import listeners.UserInput;
 import observer_pattern.ObservableSubwerkzeugInterface;
 import observer_pattern.SubwerkzeugObserver;
@@ -27,7 +31,7 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
 	
-	protected Set<SubwerkzeugObserver> alleBeobachter;
+	private Set<SubwerkzeugObserver> alleBeobachter;
 	
 	public AbstractScene() {
 		componentList = new ArrayList<JComponent>();
@@ -40,20 +44,31 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 		this.setLayout(gbl);
 	}
 	
-	protected void setupComponent(JComponent component, int x, int y, int width, int height, UserInput input) {
-		setupComponent(component, x, y, width, height, input, null);
+	protected void setupComponent(JComponent component, int x, int y, int width, int height, UserInput input, int font) {
+		setupComponent(component, x, y, width, height, input, null, font);
 	}
 	
-	protected void setupComponent(JComponent component, int x, int y, int width, int height, UserInput input, String string) {
+	protected void setupComponent(JComponent component, int x, int y, int width, int height, UserInput input, String string, int font) {
 		if(component instanceof JLabel) {
 			component = new JLabel(string);
-			component.setFont(new Font("Calibri", Font.PLAIN, 40));
+			if(font > 0) {
+				component.setFont(new Font("Calibri", Font.PLAIN, font));
+			}
 		}
 		else if(component instanceof JButton) {
 			component = new JButton(string);
 			((JButton) component).addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					input.execute();
+				}
+			});
+		}
+		else if(component instanceof JSlider) {
+			component = new JSlider(0, 0, 10, 10);
+			((JSlider) component).addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
 					input.execute();
 				}
 			});
@@ -80,11 +95,12 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 
 	@Override
 	public void informiereUeberAenderung(MenuState newState) {
-		for (SubwerkzeugObserver beobachter : alleBeobachter)
-        {
+		for (SubwerkzeugObserver beobachter : alleBeobachter) {
             beobachter.reagiereAufAenderung(newState);
         }
 	}
 	
-	
+	protected List<JComponent> getComponentList() {
+		return componentList;
+	}
 }
