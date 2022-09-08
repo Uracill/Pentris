@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 import game.pieces.Block;
 import listeners.UserInput;
 import scenes.AbstractScene;
+import scenes.PentrisScene;
 import states.GameStateManager;
 import states.MenuState;
 import states.MoveState;
@@ -94,13 +95,87 @@ public abstract class Game extends AbstractScene {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		drawGrid(g);
+		if(this instanceof PentrisScene) {
+			drawGridPentris(g);
+		}
+		else {
+			drawGridTetris(g);
+		}
+		drawGridTetris(g);
 		g.drawString("Points: " + Integer.toString(points), 450, 50);
 		g.drawString("Level: " + Integer.toString(level), 450, 70);
 		g.drawString("Cleared Rows: " + Integer.toString(clearedRows), 450, 90);
 	}
+	
+	private void drawGridPentris(Graphics g) {
+		for(int i = 0; i < gridColumns; i++) {
+			for(int j = 0; j < gridRows; j++) {
+				if(field[i][j] > 0) {
+					switch(field[i][j]) {
+					case 1: 
+						g.setColor(new Color(0, 240, 240));
+						break;
+					case 2: 
+						g.setColor(new Color(0, 0, 240));
+						break;
+					case 3: 
+						g.setColor(new Color(240, 160, 0));
+						break;
+					case 4: 
+						g.setColor(new Color(240, 240, 0));
+						break;
+					case 5: 
+						g.setColor(new Color(0, 240, 0));
+						break;
+					case 6: 
+						g.setColor(new Color(160, 0, 240));
+						break;
+					case 7: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 8: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 9: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 11: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 12: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 13: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 14: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 15: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 16: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 17: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					case 18: 
+						g.setColor(new Color(240, 0, 0));
+						break;
+					}
+					
+					g.fillRect(i * gridCellSize + 200,
+							j * gridCellSize + 10, gridCellSize, gridCellSize);
+					g.setColor(new Color(0, 0, 0));
+				}
+				g.drawRect(i * gridCellSize + 200,
+						j * gridCellSize + 10, gridCellSize, gridCellSize);
+			}
+		}
+	}
 
-	private void drawGrid(Graphics g) {
+	private void drawGridTetris(Graphics g) {
 		for(int i = 0; i < gridColumns; i++) {
 			for(int j = 0; j < gridRows; j++) {
 				if(field[i][j] > 0) {
