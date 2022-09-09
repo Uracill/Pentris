@@ -7,7 +7,7 @@ public enum MenuState {
 	Main,
 	Pentris,
 	Tetris,
-	Highscore,
+	Leaderboard,
 	Options,
 	Pause,
 	OC,

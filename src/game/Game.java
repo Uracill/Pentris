@@ -23,29 +23,40 @@ import states.MoveState;
 
 public abstract class Game extends AbstractScene {
 
+	protected BlockSpawner spawner;
 	protected GameStateManager gameStateManager;
+	
+	private Block block;
+	private Block nextBlock;
+	private Block savedBlock;
+
+	private int swap;
 	
 	private int level;
 	private int clearedRows;
-	private int rowsLevel;
 	private int points;
 	
 	private int gridCellSize;
 	private int gridRows;
 	private int gridColumns;
 	private int[][] field;
-	private Block block;
 	
 	public Game() {
 		
 	}
 	
 	public void startGame() {
+		spawner = new BlockSpawner(this);
 		gameStateManager = new GameStateManager();
+		
+		block = null;
+		nextBlock = null;
+		savedBlock = null;
+		
+		swap = 2;
 		
 		level = 1;
 		clearedRows = 0;
-		rowsLevel = 0;
 		points = 0;
 		
 		gridCellSize = 20;
@@ -64,7 +75,8 @@ public abstract class Game extends AbstractScene {
 		addKeyBinding("DOWN", () -> moveDown());
 		addKeyBinding("RIGHT", () -> moveRight());
 		addKeyBinding("T", () -> rotateLeft());
-		addKeyBinding("Z", () -> rotateRight());	//TODO: Add save
+		addKeyBinding("Z", () -> rotateRight());
+		addKeyBinding("C", () -> saveBlock());
 	}
 
 	private void addKeyBinding(String key, UserInput input) {
@@ -101,10 +113,10 @@ public abstract class Game extends AbstractScene {
 		else {
 			drawGridTetris(g);
 		}
-		drawGridTetris(g);
-		g.drawString("Points: " + Integer.toString(points), 450, 50);
-		g.drawString("Level: " + Integer.toString(level), 450, 70);
-		g.drawString("Cleared Rows: " + Integer.toString(clearedRows), 450, 90);
+		drawOtherPieces(g);
+		g.drawString("Points: " + Integer.toString(points), 450, 100);
+		g.drawString("Level: " + Integer.toString(level), 450, 120);
+		g.drawString("Cleared Rows: " + Integer.toString((level - 1) * 10 + clearedRows), 450, 140);
 	}
 	
 	private void drawGridPentris(Graphics g) {
@@ -113,55 +125,58 @@ public abstract class Game extends AbstractScene {
 				if(field[i][j] > 0) {
 					switch(field[i][j]) {
 					case 1: 
-						g.setColor(new Color(0, 240, 240));
+						g.setColor(new Color(112, 98, 2));
 						break;
 					case 2: 
-						g.setColor(new Color(0, 0, 240));
+						g.setColor(new Color(242, 220, 78));
 						break;
 					case 3: 
-						g.setColor(new Color(240, 160, 0));
+						g.setColor(new Color(78, 74, 242));
 						break;
 					case 4: 
-						g.setColor(new Color(240, 240, 0));
+						g.setColor(new Color(240, 141, 2));
 						break;
 					case 5: 
-						g.setColor(new Color(0, 240, 0));
+						g.setColor(new Color(189, 111, 2));
 						break;
 					case 6: 
-						g.setColor(new Color(160, 0, 240));
+						g.setColor(new Color(6, 0, 189));
 						break;
 					case 7: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(4, 0, 117));
 						break;
 					case 8: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(3, 189, 0));
 						break;
 					case 9: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(4, 240, 0));
+						break;
+					case 10: 
+						g.setColor(new Color(0, 240, 224));
 						break;
 					case 11: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(242, 73, 220));
 						break;
 					case 12: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(34, 102, 107));
 						break;
 					case 13: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(2, 117, 0));
 						break;
 					case 14: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(240, 16, 0));
 						break;
 					case 15: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(189, 0, 164));
 						break;
 					case 16: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(112, 34, 102));
 						break;
 					case 17: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(189, 164, 4));
 						break;
 					case 18: 
-						g.setColor(new Color(240, 0, 0));
+						g.setColor(new Color(112, 102, 36));
 						break;
 					}
 					
@@ -212,10 +227,46 @@ public abstract class Game extends AbstractScene {
 		}
 	}
 	
+	private void drawOtherPieces(Graphics g) {
+		//SavedBlock
+		g.drawString("Saved:", 50, 50);
+		g.drawRect(90, 25, 60, 40);
+		if(savedBlock != null) {
+			for(int i = 0; i < savedBlock.getAllBlocks().get(0).length; i++) {
+				for(int j = 0; j < savedBlock.getAllBlocks().get(0)[0].length; j++) {
+					if(savedBlock.getAllBlocks().get(0)[i][j] > 0) {
+						g.setColor(savedBlock.getColor());
+						g.fillRect(i * 10 + 95, j * 10 + 30, 10, 10);
+						g.setColor(new Color(0, 0, 0));
+						g.drawRect(i * 10 + 95,
+								j * 10 + 30, 10, 10);
+					}
+				}
+			}
+		}
+		
+		//NextBlock
+		g.drawString("Next:", 450, 50);
+		g.drawRect(490, 25, 60, 40);
+		if(nextBlock != null) {	//TODO: Delete if
+			for(int i = 0; i < nextBlock.getAllBlocks().get(0).length; i++) {
+				for(int j = 0; j < nextBlock.getAllBlocks().get(0)[0].length; j++) {
+					if(nextBlock.getAllBlocks().get(0)[i][j] > 0) {
+						g.setColor(nextBlock.getColor());
+						g.fillRect(i * 10 + 95, j * 10 + 30, 10, 10);
+						g.setColor(new Color(0, 0, 0));
+						g.drawRect(i * 10 + 95,
+								j * 10 + 30, 10, 10);
+					}
+				}
+			}
+		}
+	}
+	
 	private void instantDrop() {
-		if(isFree(MoveState.Up)) {
+		while(isFree(MoveState.Down)) {
 			deleteBlock();
-			block.instantDrop();
+			block.moveDown();
 			paintBlock();
 			repaint();	
 		}
@@ -263,6 +314,22 @@ public abstract class Game extends AbstractScene {
 			block.rotateRight();
 			paintBlock();
 			repaint();
+		}
+	}
+	
+	private void saveBlock() {
+		if(swap == 2) {
+			swap = 0;
+			deleteBlock();
+			if(savedBlock == null) {
+				savedBlock = block;
+				spawner.spawnBlock();
+			}
+			else {
+				Block temp = block;
+				spawner.spawnBlock(savedBlock.getColorNumber());
+				savedBlock = temp;
+			}
 		}
 	}
 
@@ -326,6 +393,9 @@ public abstract class Game extends AbstractScene {
 	}
 
 	public void setBlock(Block newBlock) {
+		if(swap == 0 || swap == 1) {
+			swap++;
+		}
 		block = newBlock;
 		paintBlock(field);
 		repaint();
@@ -370,15 +440,24 @@ public abstract class Game extends AbstractScene {
 	}
 
 	public List<Integer> fullRows() {
+		boolean pentris = false;
+		int pentrisGap = -1;
+		if(this instanceof PentrisScene) {
+			pentris = true;
+		}
 		List<Integer> fullRows = new ArrayList<>();
 		for(int j = 0; j < gridRows; j++) {
 			boolean isFull = true;
+			if(pentris) {
+				pentrisGap = 0;
+			}
 			for(int i = 0; i < gridColumns; i++) {
 				if(field[i][j] == 0) {	//if one column of the row is empty, then the line could not get cleared
 					isFull = false;
+					pentrisGap++;
 				}
 			}
-			if(isFull) {
+			if(isFull || pentrisGap == 0 || pentrisGap == 1) {	//Zusatzregel, dass max. 1 Spalte freibleiben darf
 				fullRows.add(j);
 			}
 		}
@@ -400,13 +479,11 @@ public abstract class Game extends AbstractScene {
 	public void update(int fullRows) {
 		points = (int) (points + Math.round(Math.pow(10, fullRows) * (level * 0.6)));
 		clearedRows += fullRows;
-		rowsLevel += fullRows;
 		
-		if(rowsLevel >= 10) {
+		if(clearedRows >= 10) {
 			level++;
-			rowsLevel = rowsLevel - 10;
+			clearedRows = clearedRows - 10;
 		}
-		System.out.println(points);
 	}
 
 	public int getLevel() {

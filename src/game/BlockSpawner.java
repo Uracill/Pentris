@@ -2,6 +2,7 @@ package game;
 
 import java.util.Random;
 
+import game.pieces.Block;
 import game.pieces.pentris.PFPiece;
 import game.pieces.pentris.PFPieceR;
 import game.pieces.pentris.PIPiece;
@@ -48,86 +49,172 @@ public class BlockSpawner {
 	}
 	
 	public void spawnBlock() {
-		int blockNumber = random.nextInt(number);
+		int blockNumber = random.nextInt(number) + 1;
 		if(number == 7) {	//bei Tetris gibt es 7 Pieces
 			switch(blockNumber) {
-			case 0:
+			case 1:
 				scene.setBlock(new TIPiece()); // I Piece
 				break;
-			case 1: 
+			case 2: 
 				scene.setBlock(new TJPiece()); // J Piece
 				break;
-			case 2: 
+			case 3: 
 				scene.setBlock(new TLPiece()); // L Piece
 				break;
-			case 3:
+			case 4:
 				scene.setBlock(new TOPiece()); // O Piece
 				break;
-			case 4: 
+			case 5: 
 				scene.setBlock(new TSPiece()); // S Piece
 				break;
-			case 5:
+			case 6:
 				scene.setBlock(new TTPiece()); // T Piece
 				break;
-			case 6: 
+			case 7: 
 				scene.setBlock(new TZPiece()); // Z Piece
 				break;
 			}
 		}
 		else {	//Bei Pentris gibt es 18 Steine
 			switch(blockNumber) {
-			case 0:
+			case 1:
 				scene.setBlock(new PFPiece()); //F Piece
 				break;
-			case 1: 
+			case 2: 
 				scene.setBlock(new PFPieceR()); //F-Reverse Piece
 				break;
-			case 2: 
+			case 3: 
 				scene.setBlock(new PIPiece()); //I Piece
 				break;
-			case 3:
+			case 4:
 				scene.setBlock(new PJPiece()); //J Piece
 				break;
-			case 4: 
+			case 5: 
 				scene.setBlock(new PLPiece()); //L Piece
 				break;
-			case 5:
+			case 6:
 				scene.setBlock(new PNPiece()); //N Piece
 				break;
-			case 6: 
+			case 7: 
 				scene.setBlock(new PNPieceR()); //N-Reverse Piece
 				break;
-			case 7: 
+			case 8: 
 				scene.setBlock(new PPPiece()); //P Piece
 				break;
-			case 8: 
+			case 9: 
 				scene.setBlock(new PPPieceR()); //P-Reverse Piece
 				break;
-			case 9: 
+			case 10: 
 				scene.setBlock(new PTPiece()); //T Piece
 				break;
-			case 10: 
+			case 11: 
 				scene.setBlock(new PUPiece()); //U Piece
 				break;
-			case 11: 
+			case 12: 
 				scene.setBlock(new PVPiece()); //V Piece
 				break;
-			case 12: 
+			case 13: 
 				scene.setBlock(new PWPiece()); //W Piece
 				break;
-			case 13: 
+			case 14: 
 				scene.setBlock(new PXPiece()); //X Piece
 				break;
-			case 14: 
+			case 15: 
 				scene.setBlock(new PYPiece()); //Y Piece
 				break;
-			case 15: 
+			case 16: 
 				scene.setBlock(new PYPieceR()); //Y-Reverse Piece
 				break;
-			case 16: 
+			case 17: 
 				scene.setBlock(new PZPiece()); //Z Piece
 				break;
+			case 18: 
+				scene.setBlock(new PZPieceR()); //Z-Reverse Piece
+				break;
+			}
+		}
+	}
+
+	public void spawnBlock(int blockNumber) {
+		if(number == 7) {	//bei Tetris gibt es 7 Pieces
+			switch(blockNumber) {
+			case 1:
+				scene.setBlock(new TIPiece()); // I Piece
+				break;
+			case 2: 
+				scene.setBlock(new TJPiece()); // J Piece
+				break;
+			case 3: 
+				scene.setBlock(new TLPiece()); // L Piece
+				break;
+			case 4:
+				scene.setBlock(new TOPiece()); // O Piece
+				break;
+			case 5: 
+				scene.setBlock(new TSPiece()); // S Piece
+				break;
+			case 6:
+				scene.setBlock(new TTPiece()); // T Piece
+				break;
+			case 7: 
+				scene.setBlock(new TZPiece()); // Z Piece
+				break;
+			}
+		}
+		else {	//Bei Pentris gibt es 18 Steine
+			switch(blockNumber) {
+			case 1:
+				scene.setBlock(new PFPiece()); //F Piece
+				break;
+			case 2: 
+				scene.setBlock(new PFPieceR()); //F-Reverse Piece
+				break;
+			case 3: 
+				scene.setBlock(new PIPiece()); //I Piece
+				break;
+			case 4:
+				scene.setBlock(new PJPiece()); //J Piece
+				break;
+			case 5: 
+				scene.setBlock(new PLPiece()); //L Piece
+				break;
+			case 6:
+				scene.setBlock(new PNPiece()); //N Piece
+				break;
+			case 7: 
+				scene.setBlock(new PNPieceR()); //N-Reverse Piece
+				break;
+			case 8: 
+				scene.setBlock(new PPPiece()); //P Piece
+				break;
+			case 9: 
+				scene.setBlock(new PPPieceR()); //P-Reverse Piece
+				break;
+			case 10: 
+				scene.setBlock(new PTPiece()); //T Piece
+				break;
+			case 11: 
+				scene.setBlock(new PUPiece()); //U Piece
+				break;
+			case 12: 
+				scene.setBlock(new PVPiece()); //V Piece
+				break;
+			case 13: 
+				scene.setBlock(new PWPiece()); //W Piece
+				break;
+			case 14: 
+				scene.setBlock(new PXPiece()); //X Piece
+				break;
+			case 15: 
+				scene.setBlock(new PYPiece()); //Y Piece
+				break;
+			case 16: 
+				scene.setBlock(new PYPieceR()); //Y-Reverse Piece
+				break;
 			case 17: 
+				scene.setBlock(new PZPiece()); //Z Piece
+				break;
+			case 18: 
 				scene.setBlock(new PZPieceR()); //Z-Reverse Piece
 				break;
 			}

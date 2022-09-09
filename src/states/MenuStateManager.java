@@ -25,7 +25,7 @@ public class MenuStateManager {
 					previousState = MenuState.Null;
 				}
 			}
-			case Main, Pentris, Tetris, Highscore -> {
+			case Main, Pentris, Tetris, Leaderboard -> {
 				previousState = MenuState.Null;
 				currentState = newState;
 			}

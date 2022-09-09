@@ -13,10 +13,11 @@ public class GameThread extends Thread{
 	private GameStateManager gameStateManager;
 	private BlockSpawner spawner;
 
-	public GameThread(Game game, GameStateManager gameStateManager) {
+	public GameThread(Game game, GameStateManager gameStateManager,
+			BlockSpawner spawner) {
 		this.scene = game;
 		this.gameStateManager = gameStateManager;
-		this.spawner = new BlockSpawner(game);
+		this.spawner = spawner;
 		this.start();
 	}
 	

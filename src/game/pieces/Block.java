@@ -7,13 +7,15 @@ import java.util.List;
 public class Block {
 	
 	private List<int[][]> block;
+	private Color color;
 	private int colorNumber;
 	private int x;
 	private int y;
 	private int rotationState;
 	
-	public Block(int colorNumber, int x, int y, int[][]... block) {
+	public Block(Color color, int colorNumber, int x, int y, int[][]... block) {
 		this.block = Arrays.asList(block);
+		this.color = color;
 		this.colorNumber = colorNumber;
 		this.x = x;
 		this.y = y;
@@ -27,9 +29,13 @@ public class Block {
 		this.y = block.getY();
 		this.rotationState = block.getRotationState();
 	}
-	
+
 	public List<int[][]> getAllBlocks() {
 		return block;
+	}
+	
+	public Color getColor() {
+		return color;
 	}
 
 	public int[][] getBlock() {
@@ -93,10 +99,5 @@ public class Block {
 				rotationState++;
 			}
 		}
-	}
-
-	public void instantDrop() {
-		// TODO Auto-generated method stub
-		
 	}
 }

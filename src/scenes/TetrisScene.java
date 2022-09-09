@@ -11,6 +11,6 @@ public class TetrisScene extends Game {
 	
 	@Override
 	protected void startGameLoop() {
-		new GameThread(this, gameStateManager);
+		new GameThread(this, gameStateManager, spawner);
 	}
 }

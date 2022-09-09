@@ -47,7 +47,7 @@ public class Stage extends JFrame {
 		sceneList.add(new MainScene());
 		sceneList.add(new PentrisScene());
 		sceneList.add(new TetrisScene());
-		sceneList.add(new HighscoreScene());
+		sceneList.add(new LeaderboardScene());
 		sceneList.add(new OptionsScene());
 		sceneList.add(new PauseScene());
 		sceneList.add(new OCScene());
@@ -110,7 +110,7 @@ public class Stage extends JFrame {
 				((TetrisScene)currentScene).startGame();
 				break;
 			}
-			case Highscore -> {
+			case Leaderboard -> {
 				currentScene = sceneList.get(3);
 				break;
 			}

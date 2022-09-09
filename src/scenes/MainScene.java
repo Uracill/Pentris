@@ -20,7 +20,7 @@ public class MainScene extends AbstractScene {
 		setupComponent(new JButton(), 2, 1, 1, 1, () -> 
 		{informiereUeberAenderung(MenuState.Tetris);}, "Tetris", 0);
 		setupComponent(new JButton(), 0, 2, 1, 1, () -> 
-		{informiereUeberAenderung(MenuState.Highscore);}, "Highscore", 0);
+		{informiereUeberAenderung(MenuState.Leaderboard);}, "Leaderboard", 0);
 		setupComponent(new JButton(), 2, 2, 1, 1, () -> 
 		{informiereUeberAenderung(MenuState.Options);}, "Options", 0);
 		setupComponent(new JButton(), 1, 3, 1, 1, () -> {System.exit(0);}, "Quit", 0);
