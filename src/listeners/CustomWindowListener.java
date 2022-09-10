@@ -44,6 +44,6 @@ public class CustomWindowListener extends ObservableSubwerkzeug implements Windo
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		//informiereUeberAenderung(MenuState.Pause);
+		informiereUeberAenderung(MenuState.Pause);
 	}
 }

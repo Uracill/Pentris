@@ -27,7 +27,7 @@ public class GameThread extends Thread{
 		while(gameStateManager.getState() == GameState.Running) {
 			
 			try {
-				spawner.spawnBlock();
+				scene.spawnBlock();
 				if(!scene.isLanding()) {
 					gameStateManager.update(GameState.Paused);
 					scene.informiereUeberAenderung(MenuState.GameOver);
