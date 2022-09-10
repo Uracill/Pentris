@@ -2,6 +2,8 @@ package game;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import scenes.TetrisScene;
 import states.GameState;
 import states.GameStateManager;
@@ -11,13 +13,10 @@ public class GameThread extends Thread{
 
 	private Game scene;
 	private GameStateManager gameStateManager;
-	private BlockSpawner spawner;
 
-	public GameThread(Game game, GameStateManager gameStateManager,
-			BlockSpawner spawner) {
+	public GameThread(Game game) {
 		this.scene = game;
-		this.gameStateManager = gameStateManager;
-		this.spawner = spawner;
+		this.gameStateManager = new GameStateManager();
 		this.start();
 	}
 	
@@ -29,9 +28,7 @@ public class GameThread extends Thread{
 			try {
 				scene.spawnBlock();
 				if(!scene.isLanding()) {
-					gameStateManager.update(GameState.Paused);
-					scene.informiereUeberAenderung(MenuState.GameOver);
-					this.join(10000);
+					stopGameThread();
 				}
 				Thread.sleep(scene.getVelocity());
 				while(scene.isLanding()) {
@@ -47,6 +44,18 @@ public class GameThread extends Thread{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void stopGameThread() {
+		gameStateManager.update(GameState.Paused);
+		JOptionPane.showInputDialog("Game Over! \n Please enter your name.");
+		scene.informiereUeberAenderung(MenuState.GameOver);
+		try {
+			this.join(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

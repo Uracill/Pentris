@@ -8,9 +8,4 @@ public class TetrisScene extends Game {
 	public TetrisScene() {
 		
 	}
-	
-	@Override
-	protected void startGameLoop() {
-		new GameThread(this, gameStateManager, spawner);
-	}
 }

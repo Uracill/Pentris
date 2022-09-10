@@ -24,7 +24,7 @@ import states.MoveState;
 public abstract class Game extends AbstractScene {
 
 	protected BlockSpawner spawner;
-	protected GameStateManager gameStateManager;
+	private GameThread thread;
 	
 	private Block block;
 	private Block nextBlock;
@@ -47,7 +47,6 @@ public abstract class Game extends AbstractScene {
 	
 	public void startGame() {
 		spawner = new BlockSpawner(this);
-		gameStateManager = new GameStateManager();
 		
 		block = null;
 		nextBlock = null;
@@ -102,21 +101,26 @@ public abstract class Game extends AbstractScene {
 		});
 	}
 
-	protected abstract void startGameLoop();
+	protected void startGameLoop() {
+		thread = new GameThread(this);
+	};
 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
 		drawGrid(g);
-		drawOtherPieces(g);
 		
 		g.drawString("Saved:", 50, 50);
 		g.drawRect(90, 25, 60, 40);
+		if(savedBlock != null) {
+			drawOtherPieces(g, savedBlock, 95);
+		}
 		
 		g.drawString("Next:", 450, 50);
 		g.drawRect(490, 25, 60, 40);
-		//TODO do method
+		drawOtherPieces(g, nextBlock, 495);
+		
 		g.drawString("Points: " + Integer.toString(points), 450, 100);
 		g.drawString("Level: " + Integer.toString(level), 450, 120);
 		g.drawString("Cleared Rows: " + Integer.toString((level - 1) * 10 + clearedRows), 450, 140);
@@ -137,30 +141,15 @@ public abstract class Game extends AbstractScene {
 		}
 	}
 	
-	private void drawOtherPieces(Graphics g) {
-		if(savedBlock != null) {
-			for(int i = 0; i < savedBlock.getAllBlocks().get(0).length; i++) {
-				for(int j = 0; j < savedBlock.getAllBlocks().get(0)[0].length; j++) {
-					if(savedBlock.getAllBlocks().get(0)[i][j] == 1) {
-						g.setColor(savedBlock.getColor());
-						g.fillRect(i * 10 + 95, j * 10 + 30, 10, 10);
-						g.setColor(new Color(0, 0, 0));
-						g.drawRect(i * 10 + 95,
-								j * 10 + 30, 10, 10);
-					}
-				}
-			}
-		}
-		if(nextBlock != null) {	//TODO: Delete if
-			for(int i = 0; i < nextBlock.getAllBlocks().get(0).length; i++) {
-				for(int j = 0; j < nextBlock.getAllBlocks().get(0)[0].length; j++) {
-					if(nextBlock.getAllBlocks().get(0)[i][j] == 1) {
-						g.setColor(nextBlock.getColor());
-						g.fillRect(i * 10 + 495, j * 10 + 30, 10, 10);
-						g.setColor(new Color(0, 0, 0));
-						g.drawRect(i * 10 + 495,
-								j * 10 + 30, 10, 10);
-					}
+	private void drawOtherPieces(Graphics g, Block block, int x) {
+		for(int i = 0; i < block.getAllBlocks().get(0).length; i++) {
+			for(int j = 0; j < block.getAllBlocks().get(0)[0].length; j++) {
+				if(block.getAllBlocks().get(0)[i][j] == 1) {
+					g.setColor(block.getColor());
+					g.fillRect(i * 10 + x, j * 10 + 30, 10, 10);
+					g.setColor(new Color(0, 0, 0));
+					g.drawRect(i * 10 + x,
+							j * 10 + 30, 10, 10);
 				}
 			}
 		}
@@ -172,6 +161,15 @@ public abstract class Game extends AbstractScene {
 			block.moveDown();
 			paintBlock();
 			repaint();	
+		}
+		List<Integer> rows = fullRows();
+		if(rows.size() > 0) {
+			clearRows(rows);
+			update(rows.size());
+		}
+		spawnBlock();
+		if(!isFree(MoveState.Down)) {
+			thread.stopGameThread();
 		}
 	}
 

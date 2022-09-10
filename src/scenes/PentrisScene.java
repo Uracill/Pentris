@@ -10,9 +10,4 @@ public class PentrisScene extends Game {
 	public PentrisScene() {
 		
 	}
-	
-	@Override
-	protected void startGameLoop() {
-		new GameThread(this, gameStateManager, spawner);
-	}
 }
