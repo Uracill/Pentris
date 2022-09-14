@@ -21,7 +21,9 @@ import javax.swing.event.ChangeListener;
 
 import audio.AudioOptions;
 import listeners.UserInput;
+import observer_pattern.GameModeObserver;
 import observer_pattern.ObservableSubwerkzeugInterface;
+import observer_pattern.ObserverInterface;
 import observer_pattern.SubwerkzeugObserver;
 import states.MenuState;
 
@@ -31,13 +33,13 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
 	
-	private Set<SubwerkzeugObserver> alleBeobachter;
+	private Set<ObserverInterface> alleBeobachter;
 	
 	public AbstractScene() {
 		componentList = new ArrayList<JComponent>();
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
-		alleBeobachter = new HashSet<SubwerkzeugObserver>();
+		alleBeobachter = new HashSet<ObserverInterface>();
 		
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.insets = new Insets(10, 10, 10, 10);
@@ -83,24 +85,38 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	}
 	
 	@Override
-	public void registriereBeobachter(SubwerkzeugObserver beobachter) {
+	public void registriereBeobachter(ObserverInterface beobachter) {
 		alleBeobachter.add(beobachter);
 	}
 
 	@Override
-	public void entferneBeobachter(SubwerkzeugObserver beobachter) {
+	public void entferneBeobachter(ObserverInterface beobachter) {
 		alleBeobachter.remove(beobachter);
 		
 	}
 
 	@Override
 	public void informiereUeberAenderung(MenuState newState) {
-		for (SubwerkzeugObserver beobachter : alleBeobachter) {
-            beobachter.reagiereAufAenderung(newState);
+		for (ObserverInterface beobachter : alleBeobachter) {
+			if(beobachter instanceof SubwerkzeugObserver) {
+				((SubwerkzeugObserver)beobachter).reagiereAufAenderung(newState);
+			}
+        }
+	}
+	
+	protected void informiereUeberAenderung(boolean newState) {
+		for (ObserverInterface beobachter : getBeobachter()) {
+			if(beobachter instanceof GameModeObserver) {
+				((GameModeObserver)beobachter).reagiereAufAenderung(newState);
+			}
         }
 	}
 	
 	protected List<JComponent> getComponentList() {
 		return componentList;
+	}
+	
+	protected Set<ObserverInterface> getBeobachter() {
+		return alleBeobachter;
 	}
 }

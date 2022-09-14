@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import listeners.CustomWindowListener;
+import observer_pattern.GameModeObserver;
 import observer_pattern.SubwerkzeugObserver;
 import states.MenuState;
 import states.MenuStateManager;
@@ -59,7 +60,7 @@ public class Stage extends JFrame {
 		windowListener.registriereBeobachter(new SubwerkzeugObserver() {
 
 			@Override
-			public void reagiereAufAenderung(MenuState newState) {	//die erste Methode reagiert
+			public void reagiereAufAenderung(MenuState newState) {
 				if(menuStateManager.getCurrentState() == MenuState.Pentris
 		                || menuStateManager.getCurrentState() == MenuState.Tetris
 		                && menuStateManager.getCurrentState() != MenuState.Pause) {
@@ -77,8 +78,66 @@ public class Stage extends JFrame {
 				}
 			});
 		}
+		((MainScene)sceneList.get(0)).registriereBeobachter(new GameModeObserver() {
+			
+			@Override
+			public void reagiereAufAenderung(boolean newState) {	//newState macht nichts
+				switch(menuStateManager.getCurrentState()) {
+					case Pentris -> {
+						((PentrisScene)currentScene).startGame();
+						break;
+					}
+					case Tetris -> {
+						((TetrisScene)currentScene).startGame();
+						break;
+					}
+				}
+			}
+		});
 		((OptionsScene) sceneList.get(4)).setupObserverPattern(
 				((OCScene) sceneList.get(6)));
+		((PauseScene)sceneList.get(5)).registriereBeobachter(new GameModeObserver() {
+					
+					@Override
+					public void reagiereAufAenderung(boolean newState) {	
+						switch(menuStateManager.getCurrentState()) {
+							case Pentris -> {
+								if(newState) {
+									((PentrisScene)currentScene).startGame();
+								}
+								else {
+									((PentrisScene)currentScene).startGameLoop();
+								}
+								break;
+							}
+							case Tetris -> {
+								if(newState) {
+									((TetrisScene)currentScene).startGame();
+								}
+								else {
+									((TetrisScene)currentScene).startGameLoop();
+								}
+								break;
+							}
+						}
+					}
+				});
+		((GameOverScene)sceneList.get(8)).registriereBeobachter(new GameModeObserver() {
+			
+			@Override
+			public void reagiereAufAenderung(boolean newState) {	//newState macht nichts
+				switch(menuStateManager.getCurrentState()) {
+					case Pentris -> {
+						((PentrisScene)currentScene).startGame();
+						break;
+					}
+					case Tetris -> {
+						((TetrisScene)currentScene).startGame();
+						break;
+					}
+				}
+			}
+		});
 	}
 	
 	private void setupStart() {
@@ -102,12 +161,10 @@ public class Stage extends JFrame {
 			}
 			case Pentris -> {
 				currentScene = sceneList.get(1);
-				((PentrisScene)currentScene).startGame();
 				break;
 			}
 			case Tetris -> {
 				currentScene = sceneList.get(2);
-				((TetrisScene)currentScene).startGame();
 				break;
 			}
 			case Leaderboard -> {
@@ -119,6 +176,12 @@ public class Stage extends JFrame {
 				break;
 			}
 			case Pause -> {
+				if(currentScene instanceof PentrisScene) {
+					((PentrisScene)currentScene).pauseGame();
+				}
+				else if(currentScene instanceof TetrisScene){
+					((TetrisScene)currentScene).pauseGame();
+				}
 				currentScene = sceneList.get(5);
 				break;
 			}

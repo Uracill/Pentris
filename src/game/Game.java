@@ -15,9 +15,11 @@ import javax.swing.KeyStroke;
 
 import game.pieces.Block;
 import listeners.UserInput;
+import observer_pattern.ObserverInterface;
+import observer_pattern.GameModeObserver;
 import scenes.AbstractScene;
+import scenes.PauseScene;
 import scenes.PentrisScene;
-import states.GameStateManager;
 import states.MenuState;
 import states.MoveState;
 
@@ -29,6 +31,7 @@ public abstract class Game extends AbstractScene {
 	private Block block;
 	private Block nextBlock;
 	private Block savedBlock;
+	private boolean spawning;
 
 	private int swap;
 	
@@ -42,7 +45,7 @@ public abstract class Game extends AbstractScene {
 	private Color[][] field;
 	
 	public Game() {
-		
+		setupKeyStrokes();
 	}
 	
 	public void startGame() {
@@ -51,6 +54,7 @@ public abstract class Game extends AbstractScene {
 		block = null;
 		nextBlock = null;
 		savedBlock = null;
+		spawning = true;
 		
 		swap = 2;
 		
@@ -63,13 +67,20 @@ public abstract class Game extends AbstractScene {
 		gridColumns = 10;
 		field = new Color[gridColumns][gridRows];
 		
-		
-		setupKeyStrokes();
 		startGameLoop();
 	}
 	
+	@SuppressWarnings("deprecation")	//TODO: Exchange the thread.stop() because it is deprecatied
+	public void pauseGame() {
+		thread.pauseThread();
+		setSpawn(false);
+		thread.stop();;
+	}
+	
 	private void setupKeyStrokes() {
-		addKeyBinding("Escape", () -> informiereUeberAenderung(MenuState.Pause));
+		addPauseKeyBinding(() -> {
+			informiereUeberAenderung(MenuState.Pause);	//is calling pauseGame()
+		});
 		addKeyBinding("UP", () -> instantDrop());
 		addKeyBinding("LEFT", () -> moveLeft());
 		addKeyBinding("DOWN", () -> moveDown());
@@ -78,6 +89,19 @@ public abstract class Game extends AbstractScene {
 		addKeyBinding("Z", () -> rotateRight());
 		addKeyBinding("C", () -> saveBlock());
 	}
+	
+	private void addPauseKeyBinding(UserInput input) {
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke("released ESCAPE"), "EscapeR");
+
+        ActionMap actionMap = this.getActionMap();
+        actionMap.put("EscapeR", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	input.execute();
+            }
+        });
+    }
 
 	private void addKeyBinding(String key, UserInput input) {
 		InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -101,7 +125,7 @@ public abstract class Game extends AbstractScene {
 		});
 	}
 
-	protected void startGameLoop() {
+	public void startGameLoop() {
 		thread = new GameThread(this);
 	};
 
@@ -169,7 +193,7 @@ public abstract class Game extends AbstractScene {
 		}
 		spawnBlock();
 		if(!isFree(MoveState.Down)) {
-			thread.stopGameThread();
+			thread.gameOver();
 		}
 	}
 
@@ -402,5 +426,17 @@ public abstract class Game extends AbstractScene {
 
 	public int getVelocity() {
 		return (int)(250/(0.2*level));
+	}
+	
+	public Block getBlock() {
+		return block;
+	}
+	
+	public boolean getSpawn() {
+		return spawning;
+	}
+	
+	public void setSpawn(boolean bool) {
+		spawning = bool;
 	}
 }

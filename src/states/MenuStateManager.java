@@ -20,8 +20,8 @@ public class MenuStateManager {
 				MenuState tempState = previousState;
 				previousState = currentState;
 				currentState = tempState;
-				if(tempState == MenuState.Main || tempState == MenuState.Main
-						&& tempState == MenuState.Main ||tempState == MenuState.Main) {
+				if(tempState == MenuState.Main || tempState == MenuState.Pentris
+						|| tempState == MenuState.Tetris ||tempState == MenuState.Leaderboard) {
 					previousState = MenuState.Null;
 				}
 			}
