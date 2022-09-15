@@ -94,50 +94,38 @@ public class Stage extends JFrame {
 				}
 			}
 		});
+		((LeaderboardScene) sceneList.get(3)).setupObserverPattern(
+				((GameOverScene) sceneList.get(8)));
 		((OptionsScene) sceneList.get(4)).setupObserverPattern(
 				((OCScene) sceneList.get(6)));
 		((PauseScene)sceneList.get(5)).registriereBeobachter(new GameModeObserver() {
 					
-					@Override
-					public void reagiereAufAenderung(boolean newState) {	
-						switch(menuStateManager.getCurrentState()) {
-							case Pentris -> {
-								if(newState) {
-									((PentrisScene)currentScene).startGame();
-								}
-								else {
-									((PentrisScene)currentScene).startGameLoop();
-								}
-								break;
+				@Override
+				public void reagiereAufAenderung(boolean newState) {	
+					switch(menuStateManager.getCurrentState()) {
+						case Pentris -> {
+							if(newState) {
+								((PentrisScene)currentScene).startGame();
 							}
-							case Tetris -> {
-								if(newState) {
-									((TetrisScene)currentScene).startGame();
-								}
-								else {
-									((TetrisScene)currentScene).startGameLoop();
-								}
-								break;
+							else {
+								((PentrisScene)currentScene).startGameLoop();
 							}
+							break;
+						}
+						case Tetris -> {
+							if(newState) {
+								((TetrisScene)currentScene).startGame();
+							}
+							else {
+								((TetrisScene)currentScene).startGameLoop();
+							}
+							break;
 						}
 					}
-				});
-		((GameOverScene)sceneList.get(8)).registriereBeobachter(new GameModeObserver() {
-			
-			@Override
-			public void reagiereAufAenderung(boolean newState) {	//newState macht nichts
-				switch(menuStateManager.getCurrentState()) {
-					case Pentris -> {
-						((PentrisScene)currentScene).startGame();
-						break;
-					}
-					case Tetris -> {
-						((TetrisScene)currentScene).startGame();
-						break;
-					}
 				}
-			}
 		});
+		((GameOverScene)sceneList.get(8)).setupObserverPattern(
+				((PentrisScene)sceneList.get(1)), ((TetrisScene)sceneList.get(2)));
 	}
 	
 	private void setupStart() {

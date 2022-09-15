@@ -13,9 +13,11 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -36,13 +38,13 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 	private Set<ObserverInterface> alleBeobachter;
 	
 	public AbstractScene() {
-		componentList = new ArrayList<JComponent>();
-		gbl = new GridBagLayout();
-		gbc = new GridBagConstraints();
-		alleBeobachter = new HashSet<ObserverInterface>();
+		this.componentList = new ArrayList<JComponent>();
+		this.gbl = new GridBagLayout();
+		this.gbc = new GridBagConstraints();
+		this.alleBeobachter = new HashSet<ObserverInterface>();
 		
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(10, 10, 10, 10);
+		this.gbc.fill = GridBagConstraints.BOTH;
+		this.gbc.insets = new Insets(10, 10, 10, 10);
 		this.setLayout(gbl);
 	}
 	
@@ -65,6 +67,12 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 					input.execute();
 				}
 			});
+		}
+		else if(component instanceof JTextField) {
+			component = new JTextField();
+			((JTextField) component).setFont(new Font("Calibri", Font.PLAIN, font));
+			//((JFormattedTextField) component).
+			//TODO: Set RegEx
 		}
 		else if(component instanceof JSlider) {
 			component = new JSlider(0, 0, 10, 10);

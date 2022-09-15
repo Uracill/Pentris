@@ -17,9 +17,11 @@ import game.pieces.Block;
 import listeners.UserInput;
 import observer_pattern.ObserverInterface;
 import observer_pattern.GameModeObserver;
+import observer_pattern.GameOverObserver;
 import scenes.AbstractScene;
 import scenes.PauseScene;
 import scenes.PentrisScene;
+import scenes.TetrisScene;
 import states.MenuState;
 import states.MoveState;
 
@@ -402,9 +404,14 @@ public abstract class Game extends AbstractScene {
 
 	public void clearRows(List<Integer> rows) {
 		for(int r: rows) {
-			for(int j = r; j > 0; j--) {
+			for(int j = r; j >= 0; j--) {
 				for(int i = field.length - 1; i >= 0; i--) {
-					field[i][j] = field[i][j-1];
+					if(j == 0) {
+						field[i][j] = null;
+					}
+					else {
+						field[i][j] = field[i][j-1];
+					}
 				}
 			}
 		}
@@ -438,5 +445,28 @@ public abstract class Game extends AbstractScene {
 	
 	public void setSpawn(boolean bool) {
 		spawning = bool;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public String instanceOf() {
+		if(this instanceof PentrisScene) {
+			return "Pentris";
+		}
+		else if(this instanceof TetrisScene) {
+			return "Tetris";
+		}
+		return null;	//Kommt nie vor
+	}
+	
+	public void informiereUeberAenderung(int points, String gameMode) {
+		for(ObserverInterface beobachter: getBeobachter()) {
+			if(beobachter instanceof GameOverObserver) {
+				((GameOverObserver) beobachter).reagiereAufAenderung(
+						points, null, gameMode);
+			}
+		}
 	}
 }

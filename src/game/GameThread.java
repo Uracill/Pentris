@@ -50,10 +50,10 @@ public class GameThread extends Thread{
 
 	public void gameOver() {
 		pauseThread();
-		//JOptionPane.showInputDialog("Game Over! \n Please enter your name.");
 		scene.informiereUeberAenderung(MenuState.GameOver);
+		scene.informiereUeberAenderung(scene.getPoints(), scene.instanceOf());
 		try {
-			this.join(1000);
+			this.join(1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
