@@ -49,17 +49,24 @@ public class LeaderboardScene extends AbstractScene {
 		title.setVerticalAlignment(JLabel.CENTER);
 		table = new JTable();
 		
-		Vector columnIdentifiers = new Vector();
+		Vector<String> columnIdentifiers = new Vector();
 		columnIdentifiers.add("Points");
 		columnIdentifiers.add("Player name");
 		columnIdentifiers.add("Playmode");
 		
-		tm = (DefaultTableModel) table.getModel();
-		tm.addColumn("Points");
-		tm.addColumn("Player name");
-		tm.addColumn("Playmode");
-		//System.out.println(tm.getColumnName(0).);	//TODO: Fix
-		tm.getColumnClass(0).componentType();
+		
+		tm = new DefaultTableModel(new Object[][] {},
+				new String[] {"Points", "Player name", "Playmode"}) {
+			Class[] columnTypes = new Class[] {
+					Integer.class,
+					String.class,
+					String.class
+				};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		};
+		table.setModel(tm);
 		
 		JScrollPane sp = new JScrollPane(table);
 		
@@ -90,6 +97,8 @@ public class LeaderboardScene extends AbstractScene {
 		
 		ArrayList<SortKey> keys = new ArrayList<>();
 		keys.add(new SortKey(0, SortOrder.DESCENDING));
+		
+		tableSorter.setSortKeys(keys);
 	}
 
 	public DefaultTableModel getTM() {
