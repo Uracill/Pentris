@@ -13,7 +13,6 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -21,7 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import audio.AudioOptions;
 import listeners.UserInput;
 import observer_pattern.GameModeObserver;
 import observer_pattern.ObservableSubwerkzeugInterface;
