@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -70,12 +72,7 @@ public class LeaderboardScene extends AbstractScene {
 		
 		JScrollPane sp = new JScrollPane(table);
 		
-		try(FileInputStream fs = new FileInputStream(fileName);
-				ObjectInputStream os = new ObjectInputStream(fs);) {
-			tm.setDataVector((Vector <Vector>)os.readObject(), columnIdentifiers);
-		} catch (IOException | ClassNotFoundException e ) {
-			e.printStackTrace();
-		}
+		readLeaderboardFile(columnIdentifiers);
 		
 		JButton ok = new JButton("OK");
 		ok.addActionListener(new ActionListener() {
@@ -91,6 +88,23 @@ public class LeaderboardScene extends AbstractScene {
 		this.add(ok, BorderLayout.SOUTH);
 	}
 	
+	private void readLeaderboardFile(Vector<String> columnIdentifiers) {
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+		    String line = br.readLine();
+		    if (line != null && 
+		        (line.length() != 0 || br.readLine() != null)) {	//Testet, ob die Datei nicht leer ist. Es wird nur geladen, wenn die erste Zeile nicht leer ist
+		    	try(FileInputStream fs = new FileInputStream(fileName);
+						ObjectInputStream os = new ObjectInputStream(fs);) {
+					tm.setDataVector((Vector <Vector>)os.readObject(), columnIdentifiers);
+				} catch (IOException | ClassNotFoundException e ) {
+					e.printStackTrace();
+				}
+		    }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setupTableSorter() {
 		tableSorter = new TableRowSorter<>(tm);
 		table.setRowSorter(tableSorter);
