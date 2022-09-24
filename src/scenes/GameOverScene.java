@@ -49,7 +49,6 @@ public class GameOverScene extends AbstractScene {
 				}
 				else {
 					String text = ((JTextField) getComponentList().get(4)).getText();
-					System.out.println(((JTextField) getComponentList().get(4)).getText());
 					if(!text.matches("[A-Za-z0-9]{0,7}")) {
 						((JTextField) getComponentList().get(4)).setText(text.substring(0, text.length() - 1));
 					}
