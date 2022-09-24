@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -69,8 +71,6 @@ public abstract class AbstractScene extends JPanel implements ObservableSubwerkz
 		else if(component instanceof JTextField) {
 			component = new JTextField();
 			((JTextField) component).setFont(new Font("Calibri", Font.PLAIN, font));
-			//((JFormattedTextField) component).
-			//TODO: Set RegEx
 		}
 		else if(component instanceof JSlider) {
 			component = new JSlider(0, 0, 10, 10);

@@ -1,5 +1,8 @@
 package scenes;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,6 +36,34 @@ public class GameOverScene extends AbstractScene {
 				"OK", 0);
 		setupComponent(new JButton(), 2, 4, 1, 1, () -> 
 		{informiereUeberAenderung(MenuState.Main);}, "Cancel", 0);
+		
+		((JTextField) getComponentList().get(4)).addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyChar() == KeyEvent.VK_ENTER) {
+					informiereUeberAenderung(MenuState.Leaderboard);
+					informiereUeberAenderung(
+							((JTextField)getComponentList().get(4)).getText(),
+							score, gameMode);
+				}
+				else {
+					String text = ((JTextField) getComponentList().get(4)).getText();
+					System.out.println(((JTextField) getComponentList().get(4)).getText());
+					if(!text.matches("[A-Za-z0-9]{0,7}")) {
+						((JTextField) getComponentList().get(4)).setText(text.substring(0, text.length() - 1));
+					}
+				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+		});
 	}
 	
 	private void informiereUeberAenderung(String playerName, int score, String gameMode) {

@@ -103,7 +103,7 @@ public class BlockSpawner {
 				newBlock = new PPPiece(); //P Piece
 				break;
 			case 9: 
-				newBlock = new PFPieceR(); //P-Reverse Piece
+				newBlock = new PPPieceR(); //P-Reverse Piece
 				break;
 			case 10: 
 				newBlock = new PTPiece(); //T Piece
